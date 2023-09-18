@@ -129,10 +129,13 @@ app.get('/profile', (req, res) => {
   `);
 });
 
-// Logout route
 app.get('/logout', (req, res) => {
-  req.logout();
-  res.redirect('/');
+  req.logout((err) => {
+    if (err) {
+      console.error('Error logging out:', err);
+    }
+    res.redirect('/');
+  });
 });
 
 // Start the server
