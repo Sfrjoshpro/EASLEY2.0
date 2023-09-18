@@ -52,7 +52,7 @@ passport.deserializeUser((user, done) => {
 
 // Define your route to handle other requests
 app.get('/', (req, res) => {
-  res.send('Hello, this is your Node.js server!');
+  res.sendFile(__dirname + '/public/index.html');
 });
 
 // Check if the database exists
@@ -104,8 +104,8 @@ app.get(
   '/auth/google/callback',
   passport.authenticate('google', { failureRedirect: '/' }),
   (req, res) => {
-    // Successful authentication, redirect to the profile page
-    res.redirect('/profile');
+    // Redirect to the profile page (profile.html) after successful login
+    res.sendFile(__dirname + '/public/profile.html');
   }
 );
 
@@ -113,20 +113,13 @@ app.get(
 app.get('/profile', (req, res) => {
   // Check if the user is authenticated
   if (!req.isAuthenticated()) {
-    res.redirect('/'); // Redirect to the homepage if not authenticated
+    res.status(401).json({ message: 'Not authenticated' });
     return;
   }
 
   // Access user details from the request object
   const user = req.user;
-
-  // Display user information on the profile page
-  res.send(`
-    <h1>Welcome, ${user.displayName}</h1>
-    <img src="${user.photos[0].value}" alt="Profile Picture">
-    <p>Email: ${user.emails[0].value}</p>
-    <a href="/logout">Logout</a>
-  `);
+  res.json(user);
 });
 
 app.get('/logout', (req, res) => {

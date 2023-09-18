@@ -8,14 +8,32 @@ function loadContent(fragmentId) {
   // Handle button click
   const button = document.getElementById('myButton');
   button.addEventListener('click', function () {
-      alert('YAY!');
+    alert('YAY!');
   });
 }
 
 // Function to handle navigation
 function navigate() {
   const fragmentId = location.hash.substr(1);
-  loadContent(fragmentId);
+
+  // Check if the fragment is 'profile'
+  if (fragmentId === 'profile') {
+    // Load profile.html
+    loadProfileHtml();
+  } else {
+    // Load other content
+    loadContent(fragmentId);
+  }
+}
+
+// Function to load profile.html
+function loadProfileHtml() {
+  fetch('/profile.html')
+    .then((response) => response.text())
+    .then((html) => {
+      const content = document.getElementById('content');
+      content.innerHTML = html;
+    });
 }
 
 // Event listener for navigation
